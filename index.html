@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto:wght@400;500;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
@@ -32,7 +34,7 @@
             <h3>Booking Flights</h3>
             <div class="input-group">
                 <label for="">Flying From</label>
-                <input class="inp-style" type="text" name="" placeholder="Dhake, Bangladesh">
+                <input class="inp-style" type="text" name="" placeholder="Dhaka, Bangladesh">
             </div>
             <div class="input-group">
                 <label for="">Flying To</label>
@@ -40,7 +42,7 @@
             </div>
             <div class="inputs">
                 <div class="input-group">
-                    <label" for="">Departure</label>
+                    <label for="">Departure</label>
                     <input class="inp-style" type="date" name="">
                 </div>
                 <div class="input-group">
@@ -51,21 +53,24 @@
             <div class="input-group f-class">
                 <div>
                     <label for="">First Class ($150)</label>
-                    <input class="inp-style inp-width" type="number" name="">
+                    <input id="higher-ticket-count" class="inp-width" type="number" name="" value="0">
                 </div>
-                <div class="plus-minus-btn">
-                    <p>+ -</p>
-                </div>
+                <button onclick="handleTicketChange('higher', true)" class="btn btn-default"><i
+                        class="fas fa-plus"></i></button>
+                <button onclick="handleTicketChange('higher', false)" class="btn btn-default"><i
+                        class="fas fa-minus"></i></button>
+
             </div>
-            
+
             <div class="input-group f-class">
                 <div>
                     <label for="">Economy ($100)</label>
-                    <input class="inp-style inp-width" type="number" name="">
+                    <input id="lower-ticket-count" class="inp-width" type="number" name="" value="0">
                 </div>
-                <div class="plus-minus-btn">
-                    <p> <span>+</span> <span>-</span> </p>
-                </div>
+                <button onclick="handleTicketChange('lower', true)" class="btn btn-default"><i
+                        class="fas fa-plus"></i></button>
+                <button onclick="handleTicketChange('lower', false)" class="btn btn-default"><i
+                        class="fas fa-minus"></i></button>
             </div>
             <div class="calculations">
                 <div class="amount">
@@ -73,7 +78,7 @@
                         <p>Subtotal</p>
                     </div>
                     <div class="right">
-                        <p>$500</p>
+                        <p id="total-price">$00</p>
                     </div>
                 </div>
 
@@ -82,7 +87,7 @@
                         <p>Charge 10% VAT</p>
                     </div>
                     <div class="right">
-                        <p>$50</p>
+                        <p id="vat-amount">$0</p>
                     </div>
                 </div>
                 <hr>
@@ -91,20 +96,84 @@
                         <h4>Total</h4>
                     </div>
                     <div class="right">
-                        <p>$550</p>
+                        <p id="total-cost">$00</p>
                     </div>
                 </div>
             </div>
-            <button class="btn-style">Book Now</button>
+            <button id="booking-massage" class="btn-style">Book Now</button>
         </div>
 
         <div class="booking-content">
             <h1>discover <br> around the world</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicingelit. Provident voluptatibus quam fuga laborumalias veniam libero autem quasi maxime ullam vero nama imi dolor, architecto ab facilis eaque deserunt nobise voluptatibus quam</p>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicingelit. Provident voluptatibus quam fuga laborumalias
+                veniam libero autem quasi maxime ullam vero nama imi dolor, architecto ab facilis eaque deserunt nobise
+                voluptatibus quam</p>
         </div>
-    </section>
 
-    <!--Thank You-->
+        <div id="booked-show" class="booked-part">
+            <p>Thank You Sir. Your booking is conformed. Please wait for your flight.</p>
+        </div>
+        </section>
+
+
+
+
+        <!-- JavaScript coding part -->
+
+        <script>
+            //Ticket increase and decrease part js code
+            function handleTicketChange(ticket, isIncrease) {
+                const ticketInput = document.getElementById(ticket + '-ticket-count');
+                const ticketCount = getInputValue(ticket);
+
+                let ticketNewCount = ticketCount;
+                if (isIncrease == true) {
+                    ticketNewCount = ticketCount + 1;
+                }
+                if (isIncrease == false && ticketCount > 0) {
+                    ticketNewCount = ticketCount - 1;
+                }
+
+                ticketInput.value = ticketNewCount;
+
+                let ticketTotal = 0;
+                if (ticket == 'higher') {
+                    ticketTotal = ticketNewCount * 150;
+                }
+                if (ticket == 'lower') {
+                    ticketTotal = ticketNewCount * 100;
+                }
+                calculateTotal();
+            }
+
+            //Total calculation part in ticket cost
+            function calculateTotal() {
+                const higherTicketCount = getInputValue('higher');
+                const lowerTicketCount = getInputValue('lower');
+
+                const totalPrice = higherTicketCount * 150 + lowerTicketCount * 100;
+                document.getElementById('total-price').innerText = '$' + totalPrice;
+
+                const vat = Math.round(totalPrice * 0.1);
+                document.getElementById('vat-amount').innerText = '$' + vat;
+
+                const totalCost = totalPrice + vat;
+                document.getElementById('total-cost').innerText = '$' + totalCost;
+            }
+
+            function getInputValue(ticket) {
+                const ticketInput = document.getElementById(ticket + '-ticket-count');
+                const ticketCount = parseInt(ticketInput.value);
+                return ticketCount;
+            }
+
+            //Booked massage conform part js
+            document.getElementById('booking-massage').addEventListener('click', function () {
+                const bookedShow = document.getElementById('booked-show');
+                bookedShow.style.display = 'block';
+            })
+            
+        </script>
 </body>
 
 </html>
